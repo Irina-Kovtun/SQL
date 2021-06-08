@@ -14,7 +14,6 @@ import static java.time.Duration.ofSeconds;
 public class VerificationPage {
     private SelenideElement codeField = $("[data-test-id=code] input");
     private SelenideElement verifyButton = $("[data-test-id=action-verify]");
-    private SelenideElement errorBox = $("[data-test-id=error-notification]");
 
     public VerificationPage() {
         codeField.shouldBe(Condition.visible);
