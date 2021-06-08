@@ -1,4 +1,4 @@
-package ru.netology;
+package ru.netology.domain.tests;
 
 import com.github.javafaker.Faker;
 import lombok.val;
@@ -16,7 +16,7 @@ public class DBInteraction {
 
         try (
                 val conn = DriverManager.getConnection(
-                        "jdbc:mysql://localhost:3306/app_db", "user", "pass"
+                        "jdbc:mysql://localhost:3306/app", "app", "pass"
                 );
                 val dataStmt = conn.prepareStatement(dataSQL);
         ) {
