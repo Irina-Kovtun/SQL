@@ -20,6 +20,7 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 import static java.time.Duration.ofSeconds;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class AppTest {
@@ -34,15 +35,14 @@ public class AppTest {
         SqlRequest.clearBD();
     }
 
-   @Test
+    @Test
     void shouldRunAppWithValidData() {
         val loginPage = new LoginPage();
         val authInfo = DataHelper.getAuthInfo();
         val verificationPage = loginPage.validLogin(authInfo);
         val verificationCode = SqlRequest.getVerificationCode(authInfo);
-        val dashboardPage = verificationPage.validVerify(verificationCode);
-       $("[data-test-id='dashboard']").shouldBe(visible)
-               .shouldHave(exactText("Личный кабинет"));
+        val dashboardPage  = verificationPage.validVerify(verificationCode);
+        dashboardPage.validFields();
     }
 
     @Test
@@ -50,12 +50,6 @@ public class AppTest {
         val loginPage = new LoginPage();
         val invalidAuthInfo = DataHelper.getInvalidAuthInfo();
         loginPage.invalidLogin(invalidAuthInfo);
-        SelenideElement errorBox  = $("[data-test-id=error-notification]");
-        errorBox.shouldBe(visible, Duration.ofSeconds(5));
-        $("[data-test-id=error-notification]>.notification__title")
-                .shouldHave(text("Ошибка"));
-        $("[data-test-id=error-notification]>.notification__content")
-                .shouldHave(text("Ошибка! Неверно указан логин или пароль"));
     }
 
     @Test
@@ -65,17 +59,5 @@ public class AppTest {
         val verificationPage = loginPage.validLogin(authInfo);
         val invalidVerificationCode = DataHelper.getInvalidVerificationCode();
         verificationPage.invalidVerify(invalidVerificationCode);
-        SelenideElement errorBox = $("[data-test-id=error-notification]");
-        errorBox.shouldBe(visible, ofSeconds(15));
-        $("[data-test-id=error-notification]>.notification__title")
-                .shouldHave(text("Ошибка"));
-        $("[data-test-id=error-notification]>.notification__content")
-                .shouldHave(text("Ошибка! \nНеверно указан код! Попробуйте ещё раз."));
-    }
-    @Test
-    void checkVerCode() {
-        DataHelper.AuthInfo newinfo = DataHelper.getAuthInfo();
-        String str1 = SqlRequest.getVerificationCode(newinfo);
-        System.out.println(str1);
     }
 }
